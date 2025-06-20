@@ -1,32 +1,15 @@
-name: Manual Trigger with Params
+name: "Webhook Event example"
 
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Name of the person to greet'
-        required: true
-        type: string
-      greeting:
-        description: 'Type of greeting'
-        required: true
-        type: string
-      data:
-        description: 'Base64 encoded content of a file'
-        required: false
-        type: string
+  repository_dispatch:
+    types:
+      - webhook
 
 jobs:
-  greet:
+  respond-to-dispatch:
     runs-on: ubuntu-latest
     steps:
-      - name: Decode File Content
-        run: |
-          echo "${{ inputs.data }}" | base64 --decode > ./decoded_file.txt
-      - name: Display Greeting
-        run: |
-          echo "${{ inputs.greeting }}, ${{ inputs.name }}!"
-      - name: Display File Content
-        run: |
-          echo "Contents of the file:"
-          cat ./decoded_file.txt
+      - name Checkout repo
+        uses: actions/checkout@v2
+      - name: Run a script
+        run: echo "Event of type: $GITHUB_EVENT_NAME"
